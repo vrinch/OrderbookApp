@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import 'react-native-reanimated';
 import { View, StyleSheet } from 'react-native';
 
@@ -24,7 +24,7 @@ import { useFonts } from 'expo-font';
 
 // Importing SplashScreen and NetInfo for handling splash screen and network status
 import * as SplashScreen from 'expo-splash-screen';
-import NetInfo, { useNetInfo } from '@react-native-community/netinfo';
+import { useNetInfo } from '@react-native-community/netinfo';
 
 // Importing fonts to be loaded up and used in the app
 import BoingBold from './assets/fonts/Boing-Bold.ttf';
@@ -74,7 +74,9 @@ export default function RootLayout() {
 
   // Throw error if font loading fails
   useEffect(() => {
-    if (error) throw error;
+    if (error) {
+      throw error;
+    }
   }, [error]);
 
   // Hide the splash screen once fonts are loaded

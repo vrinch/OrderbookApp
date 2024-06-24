@@ -2,9 +2,6 @@ import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 
 import { SCREEN_WIDTH } from '../utils/config';
-import { colors } from '../constants/theme';
-
-const { GREEN, RED, DARK_GREY } = colors;
 
 /**
  * PriceAndQuantity Component

@@ -18,19 +18,6 @@ import Loader from '../components/loader';
 
 const { DARK_GREY, RED, WHITE, BACKGROUND_COLOR, GREEN } = colors;
 
-// Function to extend WebSocket with custom options
-const myWs = function (options) {
-  return class wsClass extends WebSocket {
-    constructor(...args) {
-      if (args.length === 1) {
-        super(...[...args, 'centrifuge-json', ...[options]]);
-      } else {
-        super(...[...args, ...[options]]);
-      }
-    }
-  };
-};
-
 // Initializing Centrifuge with production WebSocket URL
 const centrifuge = new Centrifuge('wss://api.prod.rabbitx.io/ws'); // or testnet
 centrifuge.setToken(PROD_JWT); // Setting token for production or testnet
