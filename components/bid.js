@@ -1,5 +1,6 @@
 import React, { useMemo } from 'react';
 import { View, StyleSheet, FlatList } from 'react-native';
+import { FlashList } from '@shopify/flash-list';
 
 import {
   formatNumber,
@@ -41,7 +42,7 @@ const Bid = ({ data, onPress }) => {
 
   // Function to render each item in the FlatList
   const renderItem = ({ item }) => {
-    if (!!data.length) {
+    if (data.length) {
       const { price, quantity } = item;
       const width = calculatePercentage(quantity);
       return (
@@ -51,7 +52,7 @@ const Bid = ({ data, onPress }) => {
           width={width}
           color={GREEN}
           onPress={() => onPress(item)}
-          disabled
+          // disabled
         />
       );
     }
@@ -63,10 +64,11 @@ const Bid = ({ data, onPress }) => {
 
   return (
     <View style={styles.container}>
-      <FlatList
+      <FlashList
         renderItem={renderItem}
         extraData={dataList}
         data={dataList}
+        estimatedItemSize={defaultNumber}
         keyExtractor={(item, index) => index.toString()}
         contentContainerStyle={styles.contentContainerStyle}
       />

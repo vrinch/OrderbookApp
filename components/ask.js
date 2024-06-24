@@ -1,5 +1,6 @@
 import React, { useMemo, useRef } from 'react';
 import { View, StyleSheet, FlatList } from 'react-native';
+import { FlashList } from '@shopify/flash-list';
 
 import {
   defaultNumber,
@@ -54,7 +55,7 @@ const Ask = ({ data = [], onPress }) => {
           width={width}
           color={RED}
           onPress={() => onPress(item)}
-          disabled
+          // disabled
         />
       );
     }
@@ -66,11 +67,12 @@ const Ask = ({ data = [], onPress }) => {
 
   return (
     <View style={styles.container}>
-      <FlatList
+      <FlashList
         ref={flatListRef}
         renderItem={renderItem}
         extraData={dataList}
         data={dataList}
+        estimatedItemSize={defaultNumber}
         keyExtractor={(item, index) => index.toString()}
         onLayout={() => flatListRef.current.scrollToEnd()}
         contentContainerStyle={styles.contentContainerStyle}
