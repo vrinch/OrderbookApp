@@ -5,4 +5,6 @@ export const colors = {
   WHITE: '#FFFFFF',
   BLACK: '#000000',
   BACKGROUND_COLOR: '#0A0A18',
+  BONE_COLOR: '#333B47',
+  HIGHLIGHT_COLOR: '#727587',
 };

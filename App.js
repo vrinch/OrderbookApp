@@ -6,10 +6,6 @@ import { Centrifuge } from 'centrifuge';
 import { getStatusBarHeight } from 'react-native-iphone-x-helper';
 import { PROD_JWT, TESTNET_JWT } from '@env';
 
-// import {
-//   connectToCentrifuge,
-//   subscribeToChannel,
-// } from './utils/centrifugeClient';
 import { Header, Bid, Ask, AnimatedBottomSheet } from './components';
 import {
   SCREEN_WIDTH,
@@ -41,16 +37,14 @@ export default function App() {
   const [askList, setAskList] = useState([]);
   const [bidList, setBidList] = useState([]);
   const [orderBook, setOrderBook] = useState(null);
-  const [selectedMarketId, setSelectedMarketId] = useState('SOL-USD');
-  const [tokenTitle, setTokenTitle] = useState('');
-  const [currencyType, setCurrencyType] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
+  const [selectedMarketId, setSelectedMarketId] = useState('ETH-USD');
   const [messageBgColor, setMessageBgColor] = useState(DARK_GREY);
   const [message, setMessage] = useState('');
   const [openBottomSheet, setOpenBottomSheet] = useState(false);
   const [orderSequence, setOrderSequence] = useState('');
   const [bidPrice, setBidPrice] = useState(0);
   const [askPrice, setAskPrice] = useState(0);
+  const [subscriptions, setSubscriptions] = useState({});
 
   useEffect(() => {
     connectToCentrifuge();
@@ -58,7 +52,6 @@ export default function App() {
     const subscription = subscribeToChannel(
       `orderbook:${selectedMarketId}`,
       message => {
-        // console.log('Received data:', message);
         setOrderBook(message);
         setOrderSequence(message.sequence);
       },
@@ -66,7 +59,9 @@ export default function App() {
 
     return () => {
       // Cleanup on component unmount
-      subscription.unsubscribe();
+      if (subscription) {
+        subscription.unsubscribe();
+      }
     };
   }, [selectedMarketId]);
 
@@ -79,6 +74,17 @@ export default function App() {
   const connectToCentrifuge = () => {
     centrifuge.on('connected', function (ctx) {
       console.log('connected', ctx);
+      // Resubscribe to all channels after reconnecting
+      Object.keys(subscriptions).forEach(channel => {
+        const subscription = subscribeToChannel(
+          channel,
+          subscriptions[channel].callback,
+        );
+        setSubscriptions(prev => ({
+          ...prev,
+          [channel]: subscription,
+        }));
+      });
     });
 
     centrifuge.on('connecting', function (ctx) {
@@ -87,6 +93,10 @@ export default function App() {
 
     centrifuge.on('disconnected', function (ctx) {
       console.log('disconnected', ctx);
+      // Attempt to reconnect after a delay
+      setTimeout(() => {
+        centrifuge.connect();
+      }, 3000);
     });
 
     centrifuge.connect();
@@ -97,7 +107,6 @@ export default function App() {
 
     subscription.on('subscribed', ctx => {
       callback(ctx.data);
-      // console.log('Subscribed to channel:', channel, ctx);
     });
 
     subscription.on('publication', ctx => {
@@ -110,11 +119,17 @@ export default function App() {
 
     subscription.subscribe();
 
+    // Save the subscription and its callback for resubscription on reconnect
+    setSubscriptions(prev => ({
+      ...prev,
+      [channel]: { subscription, callback },
+    }));
+
     return subscription;
   };
 
   function getData(data) {
-    console.log('asks and bids length: ', askList.length, bidList.length);
+    // console.log('asks and bids length: ', askList.length, bidList.length);
     // console.log('Received data getData:', data.asks);
     const sortedAskList = sortArrayByPrice(data.asks, askList);
     const sortedBidList = sortArrayByPrice(data.bids, bidList);
@@ -129,7 +144,7 @@ export default function App() {
         : sortedBidList;
 
     setAskPrice(trimAskList[trimAskList.length - 1].price);
-    setBidPrice(trimBidList[0].price);
+    setBidPrice(trimBidList[1].price);
 
     setAskList([...trimAskList]);
     setBidList([...trimBidList]);
@@ -214,11 +229,12 @@ export default function App() {
           leftText={`(${selectedMarketId.split('-')[1].toUpperCase()})`}
         />
         <View style={styles.mainContainer}>
-          {!!askList.length && (
-            <View style={styles.section}>
-              <Ask data={askList.slice(0, -1)} onPress={handleAskSelection} />
-            </View>
-          )}
+          <View style={styles.section}>
+            <Ask
+              data={askList.length ? askList.slice(0, -1) : []}
+              onPress={handleAskSelection}
+            />
+          </View>
           {!!askPrice && (
             <Text style={styles.lastAskPriceStyle}>
               {formatNumberWithComma(askPrice)}
@@ -251,11 +267,12 @@ export default function App() {
               </TouchableOpacity>
             </View>
           )}
-          {!!bidList.length && (
-            <View style={styles.section}>
-              <Bid data={bidList.slice(1)} onPress={handleBidSelection} />
-            </View>
-          )}
+          <View style={styles.section}>
+            <Bid
+              data={askList.length ? askList.slice(1) : []}
+              onPress={handleBidSelection}
+            />
+          </View>
         </View>
       </View>
       <AnimatedBottomSheet
@@ -275,7 +292,6 @@ const styles = StyleSheet.create({
   contentWrapper: {
     flex: 1,
     backgroundColor: BACKGROUND_COLOR,
-    paddingHorizontal: SCREEN_WIDTH / 19.5,
     paddingTop: getStatusBarHeight() + SCREEN_WIDTH / 13,
     // paddingBottom: SCREEN_WIDTH / 13,
   },
@@ -292,12 +308,14 @@ const styles = StyleSheet.create({
     fontSize: SCREEN_WIDTH / 26,
     color: RED,
     paddingTop: SCREEN_WIDTH / 50,
+    paddingHorizontal: SCREEN_WIDTH / 19.5,
   },
   priceWrapper: {
     width: '100%',
     flexDirection: 'row',
     justifyContent: 'space-between',
     paddingBottom: SCREEN_WIDTH / 50,
+    paddingHorizontal: SCREEN_WIDTH / 19.5,
   },
   flagWrapper: {
     flexDirection: 'row',

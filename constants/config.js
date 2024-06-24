@@ -20,8 +20,16 @@ export function formatNumber(number) {
 
 // Format a number string with commas and two decimal places
 export function formatNumberWithComma(number = 0) {
-  const parts = number.toString().split('.');
+  // Ensure the number has exactly two decimal places
+  const fixedNumber = number.toFixed(2);
+
+  // Split the number into integer and decimal parts
+  const parts = fixedNumber.split('.');
+
+  // Add commas to the integer part
   let integerPart = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+
+  // Concatenate the integer and decimal parts
   const decimalPart = parts.length > 1 ? '.' + parts[1] : '';
 
   return integerPart + decimalPart;
@@ -61,3 +69,6 @@ export const sampleData = {
   sequence: 9097270,
   timestamp: 1677226216475971,
 };
+
+export const makeArrayNumber = num =>
+  new Array(num).fill('').map((_, i) => i + 1);

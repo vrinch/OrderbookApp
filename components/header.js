@@ -18,6 +18,7 @@ const styles = StyleSheet.create({
     width: '100%',
     flexDirection: 'row',
     justifyContent: 'space-between',
+    paddingHorizontal: SCREEN_WIDTH / 19.5,
   },
   leftTextStyle: {
     color: DARK_GREY,

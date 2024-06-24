@@ -1,6 +1,7 @@
 # OrderbookApp
+
 <p align="center">
-<! ---  <img alt="Orderly: Track Order Book" src="./assets/demo.png" height="1170" width="2532" />
+<! ---  <img alt="Orderly: Track Order Book" src="./assets/images/demo.png" height="1170" width="2532" />
   <h3 align="center">Orderly: Track Order Book</h3>
 </p>
 
@@ -8,21 +9,19 @@
 
 [![supports iOS](https://img.shields.io/badge/iOS-4630EB.svg?style=flat-square&logo=APPLE&labelColor=999999&logoColor=fff)](https://github.com/vrinch/OrderbookApp)
 [![supports Android](https://img.shields.io/badge/Android-4630EB.svg?style=flat-square&logo=ANDROID&labelColor=A4C639&logoColor=fff)](https://expo.dev/artifacts/eas/xzPdeZAmnypHogNpXMGmuT.apk)
-  <img alt="Version" src="https://img.shields.io/badge/version-0.1.0-blue.svg?cacheSeconds=2592000" />
-  <a href="https://github.com/vrinch/OrderbookApp" target="_blank">
-    <img alt="Documentation" src="https://img.shields.io/badge/documentation-yes-brightgreen.svg" />
-  </a>
-  <a href="https://github.com/vrinch/OrderbookApp/blob/main/LICENSE" target="_blank">
-    <img alt="License: MIT" src="https://img.shields.io/badge/License-MIT-yellow.svg" />
-  </a>
+<img alt="Version" src="https://img.shields.io/badge/version-0.1.0-blue.svg?cacheSeconds=2592000" />
+<a href="https://github.com/vrinch/OrderbookApp" target="_blank">
+<img alt="Documentation" src="https://img.shields.io/badge/documentation-yes-brightgreen.svg" />
+</a>
+<a href="https://github.com/vrinch/OrderbookApp/blob/main/LICENSE" target="_blank">
+<img alt="License: MIT" src="https://img.shields.io/badge/License-MIT-yellow.svg" />
+</a>
 
-
-![OrderbookApp: Track Order Book](./assets/demo.png)
+![OrderbookApp: Track Order Book](./assets/images/demo.png)
 
 ## Architecture
 
 Orderly was built to run on particularly iOS and Android. It uses [Expo](https://expo.dev/) as a core lib to build and distribute to all the platforms.
-
 
 ## Contributing
 
