@@ -19,7 +19,7 @@ import {
 } from '@expo/vector-icons';
 import { useFonts } from 'expo-font';
 import * as SplashScreen from 'expo-splash-screen';
-import NetInfo from '@react-native-community/netinfo';
+import NetInfo, { useNetInfo } from '@react-native-community/netinfo';
 
 import { useColorScheme } from './hooks/useColorScheme';
 import BoingBold from './assets/fonts/Boing-Bold.ttf';
@@ -64,17 +64,7 @@ export default function RootLayout() {
     ...Fontisto.font,
   });
 
-  useEffect(() => {
-    const unsubscribe = NetInfo.addEventListener(state => {
-      // console.log('Connection type', state.type);
-      console.log('Is connected?', state.isConnected);
-      setNetworkStatus(state.isConnected);
-    });
-
-    return () => {
-      unsubscribe();
-    };
-  }, []);
+  const neworkInformation = useNetInfo();
 
   // Expo Router uses Error Boundaries to catch errors in the navigation tree.
   useEffect(() => {
@@ -88,8 +78,10 @@ export default function RootLayout() {
   }, [loaded]);
 
   if (!loaded) {
-    return null;
+    return <View style={styles.container} />;
   }
+
+  console.log('networkStatus: ', neworkInformation.isConnected);
 
   return (
     <View style={styles.container}>
@@ -97,8 +89,8 @@ export default function RootLayout() {
       <AnimatedBottomSheet
         backgroundColor={RED}
         message={connectionMessage}
-        closeable={!networkStatus}
-        visible={!networkStatus}
+        closeable={false}
+        visible={!neworkInformation.isConnected}
         position={'top'}
         textStyle={{ paddingBottom: SCREEN_WIDTH / 13 }}
       />
