@@ -307,7 +307,7 @@ export default function App() {
           )}
           <View style={styles.section}>
             <Bid
-              data={askList.length ? askList.slice(1) : []}
+              data={bidList.length ? bidList.slice(1) : []}
               onPress={handleBidSelection}
             />
           </View>
