@@ -3,6 +3,7 @@ import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import { Ionicons } from '@expo/vector-icons';
 import { Centrifuge } from 'centrifuge';
+import { PROD_JWT, TESTNET_JWT } from '@env';
 
 // import {
 //   connectToCentrifuge,
@@ -26,11 +27,9 @@ const myWs = function (options) {
   };
 };
 
-const jwt =
-  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIwIiwiZXhwIjo1MjYyNjUyMDEwfQ.x_245iYDEvTTbraw1gt4jmFRFfgMJb-GJ-hsU9HuDik';
-const centrifuge = new Centrifuge('wss://api.testnet.rabbitx.io/ws');
+const centrifuge = new Centrifuge('wss://api.testnet.rabbitx.io/ws'); // testnet to prod
 
-centrifuge.setToken(jwt);
+centrifuge.setToken(TESTNET_JWT);
 
 const data = {
   asks: [
@@ -82,7 +81,7 @@ export default function App() {
   useEffect(() => {
     connectToCentrifuge();
 
-    const subscription = subscribeToChannel('public:news', message => {
+    const subscription = subscribeToChannel('orderbook:SOL-USD', message => {
       console.log('Received data:', message);
       // Handle the received data as needed
     });
@@ -112,9 +111,9 @@ export default function App() {
   const subscribeToChannel = (channel, callback) => {
     const subscription = centrifuge.newSubscription(channel);
 
-    subscription.on('publication', ctx => {
-      callback(ctx.data);
-    });
+    // subscription.on('publication', ctx => {
+    //   callback(ctx.data);
+    // });
 
     subscription.on('subscribed', ctx => {
       console.log('Subscribed to channel:', channel, ctx);
@@ -185,7 +184,7 @@ export default function App() {
   const handleBidSelection = ({ price, quantity }) => {
     showErrorMessage(
       GREEN,
-      `You have selected a quantity of ${formatNumber(quantity)} at a price of ${price}`,
+      `You have selected a quantity of ${formatNumber(quantity)} ${tokenTitle} at a price of ${price}`,
     );
   };
 

@@ -1,6 +1,7 @@
 // utils/centrifugeClient.js
 
 import Centrifuge from 'centrifuge';
+import { PROD_JWT, TESTNET_JWT } from '@env';
 
 const myWs = function (options) {
   return class wsClass extends WebSocket {
