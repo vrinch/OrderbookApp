@@ -7,7 +7,7 @@ import {
   makeArrayNumber,
   defaultNumber,
   SCREEN_WIDTH,
-} from '../constants/config';
+} from '../utils/config';
 import { colors } from '../constants/theme';
 import PriceAndQuantity from './priceAndQuantity';
 import Loader from './loader';

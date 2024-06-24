@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 
-import { SCREEN_WIDTH } from '../constants/config';
+import { SCREEN_WIDTH } from '../utils/config';
 import { colors } from '../constants/theme';
 
 const { DARK_GREY } = colors;
@@ -24,11 +24,13 @@ const styles = StyleSheet.create({
     color: DARK_GREY,
     paddingRight: SCREEN_WIDTH / 30,
     textAlign: 'left',
+    fontFamily: 'BoingRegular',
   },
   rightTextStyle: {
     color: DARK_GREY,
     paddingLeft: SCREEN_WIDTH / 30,
     textAlign: 'right',
+    fontFamily: 'BoingRegular',
   },
 });
 

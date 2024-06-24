@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 
-import { SCREEN_WIDTH } from '../constants/config';
+import { SCREEN_WIDTH } from '../utils/config';
 import { colors } from '../constants/theme';
 
 const { GREEN, RED, DARK_GREY } = colors;
@@ -41,6 +41,7 @@ const styles = StyleSheet.create({
   },
   itemTextStyle: {
     fontWeight: '600',
+    fontFamily: 'BoingSemiBold',
     fontSize: SCREEN_WIDTH / 30,
     paddingHorizontal: 5,
     paddingVertical: SCREEN_WIDTH / 70,

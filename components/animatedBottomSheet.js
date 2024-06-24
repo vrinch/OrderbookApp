@@ -8,7 +8,7 @@ import {
 } from 'react-native';
 import { getStatusBarHeight } from 'react-native-iphone-x-helper';
 
-import { SCREEN_WIDTH } from '../constants/config';
+import { SCREEN_WIDTH } from '../utils/config';
 import { colors } from '../constants/theme';
 
 const DEFAULT_POSITION = -SCREEN_WIDTH;
@@ -17,6 +17,7 @@ const { WHITE, GREEN } = colors;
 
 const AnimatedBottomSheet = ({
   position = 'bottom',
+  textStyle,
   backgroundColor = GREEN,
   message,
   closeable = true,
@@ -157,7 +158,7 @@ const AnimatedBottomSheet = ({
           paddingTop: position === 'top' ? getStatusBarHeight() : 0,
         },
       ]}>
-      <Text style={styles.textStyle}>{message}</Text>
+      <Text style={[textStyle, styles.textStyle]}>{message}</Text>
     </Animated.View>
   );
 };
@@ -172,7 +173,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: SCREEN_WIDTH / 19.5,
   },
   textStyle: {
-    fontFamily: 'PoppinsMedium',
+    fontFamily: 'BoingMedium',
     fontSize: SCREEN_WIDTH / 27.85,
     color: WHITE,
     paddingTop: SCREEN_WIDTH / 19.5,
