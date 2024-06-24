@@ -55,8 +55,8 @@ export default function App() {
     // Subscribe to orderbook updates for the selected market
     const subscription = subscribeToChannel(
       `orderbook:${selectedMarketId}`,
-      message => {
-        setOrderBook(message); // Update orderbook data
+      ctx => {
+        setOrderBook(ctx); // Update orderbook data
         setOrderSequence(message.sequence); // Update order sequence
       },
     );
@@ -208,21 +208,21 @@ export default function App() {
   }
 
   // Function to display a message in the bottom sheet
-  function showMessage(color, message) {
+  function showMessage(color, msg) {
     setMessageBgColor(color); // Set background color for message
-    setMessage(message); // Set message content
+    setMessage(msg); // Set message content
     setOpenBottomSheet(true); // Open bottom sheet
   }
 
   // Function to handle 'More' button press
   const handleMore = () => {
-    showErrorMessage(GREEN, 'This feature is coming soon.'); // Show coming soon message
+    showMessage(GREEN, 'This feature is coming soon.'); // Show coming soon message
   };
 
   // Function to handle selection of ask price
   const handleAskSelection = ({ price, quantity }) => {
     // Show message for selected ask price
-    showErrorMessage(
+    showMessage(
       RED,
       `You have selected a quantity of ${formatNumber(quantity)} ${
         selectedMarketId.split('-')[0]
@@ -233,7 +233,7 @@ export default function App() {
   // Function to handle selection of bid price
   const handleBidSelection = ({ price, quantity }) => {
     // Show message for selected bid price
-    showErrorMessage(
+    showMessage(
       GREEN,
       `You have selected a quantity of ${formatNumber(quantity)} ${
         selectedMarketId.split('-')[0]
@@ -261,7 +261,7 @@ export default function App() {
               onPress={handleAskSelection}
             />
           </View>
-          {!!askPrice ? (
+          {askPrice ? (
             <Text style={styles.lastAskPriceStyle}>
               {formatNumberWithComma(askPrice)}
             </Text>
@@ -273,7 +273,7 @@ export default function App() {
             />
           )}
 
-          {!!bidPrice ? (
+          {bidPrice ? (
             <View style={styles.priceWrapper}>
               <View style={styles.flagWrapper}>
                 <Ionicons
@@ -285,7 +285,7 @@ export default function App() {
                   {' '}
                   {formatNumberWithComma(bidPrice)}
                 </Text>
-                <Text style={styles.dottedUnderline}></Text>
+                <Text style={styles.dottedUnderline} />
               </View>
               <TouchableOpacity
                 style={styles.moreButtonStyle}
