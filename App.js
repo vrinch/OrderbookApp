@@ -2,13 +2,35 @@ import React, { useState, useEffect } from 'react';
 import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import { Ionicons } from '@expo/vector-icons';
+import { Centrifuge } from 'centrifuge';
 
-import { connectToCentrifuge } from './utils/centrifugeClient';
+// import {
+//   connectToCentrifuge,
+//   subscribeToChannel,
+// } from './utils/centrifugeClient';
 import { Bid, Ask, AnimatedBottomSheet } from './components';
 import { SCREEN_WIDTH, formatNumber } from './constants/config';
 import { colors } from './constants/theme';
 
 const { DARK_GREY, RED, WHITE, BACKGROUND_COLOR, GREEN } = colors;
+
+const myWs = function (options) {
+  return class wsClass extends WebSocket {
+    constructor(...args) {
+      if (args.length === 1) {
+        super(...[...args, 'centrifuge-json', ...[options]]);
+      } else {
+        super(...[...args, ...[options]]);
+      }
+    }
+  };
+};
+
+const jwt =
+  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIwIiwiZXhwIjo1MjYyNjUyMDEwfQ.x_245iYDEvTTbraw1gt4jmFRFfgMJb-GJ-hsU9HuDik';
+const centrifuge = new Centrifuge('wss://api.testnet.rabbitx.io/ws');
+
+centrifuge.setToken(jwt);
 
 const data = {
   asks: [
@@ -58,27 +80,54 @@ export default function App() {
   const [openBottomSheet, setOpenBottomSheet] = useState(false);
 
   useEffect(() => {
-    const initCentrifuge = async () => {
-      try {
-        await connectToCentrifuge();
-        // Subscribe to a channel
-        const channel = centrifuge.subscribe('example-channel');
-        channel.on('publish', data => {
-          console.log('Received data:', data);
-          // Handle the received data as needed
-        });
-      } catch (error) {
-        console.error('Error connecting to Centrifuge:', error);
-      }
-    };
+    connectToCentrifuge();
 
-    initCentrifuge();
+    const subscription = subscribeToChannel('public:news', message => {
+      console.log('Received data:', message);
+      // Handle the received data as needed
+    });
 
     return () => {
-      // Disconnect from Centrifuge when component unmounts
-      centrifuge.disconnect();
+      // Cleanup on component unmount
+      subscription.unsubscribe();
     };
   }, []);
+
+  const connectToCentrifuge = () => {
+    centrifuge.on('connected', function (ctx) {
+      console.log('connected', ctx);
+    });
+
+    centrifuge.on('connecting', function (ctx) {
+      console.log('connecting', ctx);
+    });
+
+    centrifuge.on('disconnected', function (ctx) {
+      console.log('disconnected', ctx);
+    });
+
+    centrifuge.connect();
+  };
+
+  const subscribeToChannel = (channel, callback) => {
+    const subscription = centrifuge.newSubscription(channel);
+
+    subscription.on('publication', ctx => {
+      callback(ctx.data);
+    });
+
+    subscription.on('subscribed', ctx => {
+      console.log('Subscribed to channel:', channel, ctx);
+    });
+
+    subscription.on('error', ctx => {
+      console.error('Subscription error on channel:', channel, ctx);
+    });
+
+    subscription.subscribe();
+
+    return subscription;
+  };
 
   useEffect(() => {
     getMarketID();
