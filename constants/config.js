@@ -1,8 +1,10 @@
 import { Dimensions } from 'react-native';
 
-export const SCREEN_WIDTH = Dimensions.get('window').width;
-export const SCREEN_HEIGHT = Dimensions.get('window').height;
+// Get screen dimensions
+export const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } =
+  Dimensions.get('window');
 
+// Format large numbers into abbreviated forms (e.g., 1B for billion, 1M for million, etc.)
 export function formatNumber(number) {
   if (number >= 1e9) {
     return (number / 1e9).toFixed(1) + 'B';
@@ -16,24 +18,19 @@ export function formatNumber(number) {
   return number.toString();
 }
 
-/**
- * Returns a string representation of a number with commas and two decimal places.
- * @param {number} number - The number to format.
- * @returns {string} The formatted number as a string.
- */
-export const formatNumberWithComma = (number = 0) => {
-  // Convert number to string and split into integer and decimal parts
+// Format a number string with commas and two decimal places
+export function formatNumberWithComma(number = 0) {
   const parts = number.toString().split('.');
-  let integerPart = parts[0];
+  let integerPart = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',');
   const decimalPart = parts.length > 1 ? '.' + parts[1] : '';
 
-  // Add commas to integer part using regex
-  integerPart = integerPart.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-
-  // Return formatted number
   return integerPart + decimalPart;
-};
+}
 
+// Default number constant
+export const defaultNumber = 13;
+
+// Sample data for bids and asks in a market
 export const sampleData = {
   asks: [
     ['25.4631', '73.63'],

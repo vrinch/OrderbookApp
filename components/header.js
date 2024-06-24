@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 
 import { SCREEN_WIDTH } from '../constants/config';
@@ -13,7 +13,6 @@ const Header = ({ leftText, rightText }) => (
   </View>
 );
 
-// define your styles
 const styles = StyleSheet.create({
   headerWrapper: {
     width: '100%',

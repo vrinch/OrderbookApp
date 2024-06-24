@@ -6,30 +6,30 @@ import { colors } from '../constants/theme';
 
 const { GREEN, RED, DARK_GREY } = colors;
 
-function PriceAndQuantity({
+const PriceAndQuantity = ({
   price,
   quantity,
   width,
   color,
   onPress,
   disabled,
-}) {
+}) => {
+  const overlayStyle = {
+    width: `${width}%`,
+    backgroundColor: color,
+  };
+
   return (
     <TouchableOpacity
       style={styles.itemContainer}
       onPress={onPress}
       disabled={disabled}>
-      <Text style={[{ color }, styles.itemTextStyle]}>{price}</Text>
-      <Text style={[{ color }, styles.itemTextStyle]}>{quantity}</Text>
-      <View
-        style={[
-          { width: `${width}%`, backgroundColor: color },
-          styles.overlayWrapper,
-        ]}
-      />
+      <Text style={[styles.itemTextStyle, { color }]}>{price}</Text>
+      <Text style={[styles.itemTextStyle, { color }]}>{quantity}</Text>
+      <View style={[styles.overlayWrapper, overlayStyle]} />
     </TouchableOpacity>
   );
-}
+};
 
 const styles = StyleSheet.create({
   itemContainer: {

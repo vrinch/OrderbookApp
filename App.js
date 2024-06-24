@@ -1,11 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import {
-  StyleSheet,
-  Text,
-  View,
-  TouchableOpacity,
-  Platform,
-} from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import { Ionicons } from '@expo/vector-icons';
 import { Centrifuge } from 'centrifuge';
@@ -19,6 +13,7 @@ import { PROD_JWT, TESTNET_JWT } from '@env';
 import { Header, Bid, Ask, AnimatedBottomSheet } from './components';
 import {
   SCREEN_WIDTH,
+  defaultNumber,
   formatNumber,
   formatNumberWithComma,
 } from './constants/config';
@@ -38,9 +33,9 @@ const myWs = function (options) {
   };
 };
 
-const centrifuge = new Centrifuge('wss://api.prod.rabbitx.io/ws');
+const centrifuge = new Centrifuge('wss://api.prod.rabbitx.io/ws'); // or testnet
 
-centrifuge.setToken(PROD_JWT);
+centrifuge.setToken(PROD_JWT); // TESTNET_JWT
 
 export default function App() {
   const [askList, setAskList] = useState([]);
@@ -73,7 +68,7 @@ export default function App() {
       // Cleanup on component unmount
       subscription.unsubscribe();
     };
-  }, []);
+  }, [selectedMarketId]);
 
   useEffect(() => {
     if (orderBook) {
@@ -125,9 +120,13 @@ export default function App() {
     const sortedBidList = sortArrayByPrice(data.bids, bidList);
 
     const trimAskList =
-      sortedAskList.length > 15 ? sortedAskList.slice(-15) : sortedAskList;
+      sortedAskList.length > defaultNumber
+        ? sortedAskList.slice(-defaultNumber)
+        : sortedAskList;
     const trimBidList =
-      sortedBidList.length > 15 ? sortedBidList.slice(0, 15) : sortedBidList;
+      sortedBidList.length > defaultNumber
+        ? sortedBidList.slice(0, defaultNumber)
+        : sortedBidList;
 
     setAskPrice(trimAskList[trimAskList.length - 1].price);
     setBidPrice(trimBidList[0].price);
@@ -190,14 +189,14 @@ export default function App() {
   const handleAskSelection = ({ price, quantity }) => {
     showErrorMessage(
       RED,
-      `You have selected a quantity of ${formatNumber(quantity)} ${tokenTitle} at a price of $${formatNumberWithComma(price)}`,
+      `You have selected a quantity of ${formatNumber(quantity)} ${selectedMarketId.split('-')[0]} at a price of $${formatNumberWithComma(price)}`,
     );
   };
 
   const handleBidSelection = ({ price, quantity }) => {
     showErrorMessage(
       GREEN,
-      `You have selected a quantity of ${formatNumber(quantity)} ${tokenTitle} at a price of $${formatNumberWithComma(price)}`,
+      `You have selected a quantity of ${formatNumber(quantity)} ${selectedMarketId.split('-')[0]} at a price of $${formatNumberWithComma(price)}`,
     );
   };
 
@@ -211,8 +210,8 @@ export default function App() {
         />
         <Header leftText={'Price'} rightText={'Quantity'} />
         <Header
-          leftText={`(${selectedMarketId.split('-')[1].toUpperCase()})`}
           rightText={`(${selectedMarketId.split('-')[0].toUpperCase()})`}
+          leftText={`(${selectedMarketId.split('-')[1].toUpperCase()})`}
         />
         <View style={styles.mainContainer}>
           {!!askList.length && (
