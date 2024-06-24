@@ -6,9 +6,19 @@ import { colors } from '../constants/theme';
 
 const { GREEN, RED, DARK_GREY } = colors;
 
-function PriceAndQuantity({ price, quantity, width, color, onPress }) {
+function PriceAndQuantity({
+  price,
+  quantity,
+  width,
+  color,
+  onPress,
+  disabled,
+}) {
   return (
-    <TouchableOpacity style={styles.itemContainer} onPress={onPress}>
+    <TouchableOpacity
+      style={styles.itemContainer}
+      onPress={onPress}
+      disabled={disabled}>
       <Text style={[{ color }, styles.itemTextStyle]}>{price}</Text>
       <Text style={[{ color }, styles.itemTextStyle]}>{quantity}</Text>
       <View

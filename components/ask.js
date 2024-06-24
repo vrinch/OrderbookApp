@@ -1,7 +1,8 @@
 import React from 'react';
 import { View, StyleSheet, FlatList } from 'react-native';
+import { FlashList } from '@shopify/flash-list';
 
-import { formatNumber } from '../constants/config';
+import { formatNumber, formatNumberWithComma } from '../constants/config';
 import { colors } from '../constants/theme';
 import PriceAndQuantity from './priceAndQuantity';
 
@@ -28,11 +29,12 @@ const Ask = ({ data, onPress }) => {
     const width = calculatePercentage(quantity);
     return (
       <PriceAndQuantity
-        price={formatNumber(price)}
+        price={formatNumberWithComma(price)}
         quantity={formatNumber(quantity)}
         width={width}
         color={RED}
         onPress={() => onPress(item)}
+        disabled
       />
     );
   };
@@ -44,6 +46,13 @@ const Ask = ({ data, onPress }) => {
         extraData={data}
         data={data}
         keyExtractor={(item, index) => index.toString()}
+        initialScrollIndex={!!data.length ? data.length - 1 : 0}
+        scrollEnabled={false}
+        getItemLayout={(ctx, index) => ({
+          length: 50,
+          offset: 50 * index,
+          index,
+        })}
       />
     </View>
   );

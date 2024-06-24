@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, StyleSheet, FlatList } from 'react-native';
 
-import { formatNumber } from '../constants/config';
+import { formatNumber, formatNumberWithComma } from '../constants/config';
 import { colors } from '../constants/theme';
 import PriceAndQuantity from './priceAndQuantity';
 
@@ -28,11 +28,12 @@ const Bid = ({ data, onPress }) => {
     const width = calculatePercentage(quantity);
     return (
       <PriceAndQuantity
-        price={formatNumber(price)}
+        price={formatNumberWithComma(price)}
         quantity={formatNumber(quantity)}
         width={width}
         color={GREEN}
         onPress={() => onPress(item)}
+        disabled
       />
     );
   };
@@ -44,6 +45,13 @@ const Bid = ({ data, onPress }) => {
         extraData={data}
         data={data}
         keyExtractor={(item, index) => index.toString()}
+        scrollEnabled={false}
+        // initialScrollIndex={!!data.length ? data.length - 1 : 0}
+        // getItemLayout={(ctx, index) => ({
+        //   length: 50,
+        //   offset: 50 * index,
+        //   index,
+        // })}
       />
     </View>
   );
