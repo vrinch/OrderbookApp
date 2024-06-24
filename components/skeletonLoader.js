@@ -6,6 +6,7 @@ import { colors } from '../constants/theme';
 
 const { BONE_COLOR, HIGHLIGHT_COLOR } = colors;
 
+// Create an animated component from LinearGradient
 const AnimatedLG = Animated.createAnimatedComponent(LinearGradient);
 
 /**
@@ -18,13 +19,15 @@ const AnimatedLG = Animated.createAnimatedComponent(LinearGradient);
  * @returns {JSX.Element} - The skeleton loader component.
  */
 const SkeletonLoader = ({ boneColor, highlightColor, style, width = 50 }) => {
+  // Animated value used for the animation
   const animatedValue = useRef(new Animated.Value(0)).current;
 
+  // Colors for the gradient animation
   const firstColor = boneColor || BONE_COLOR;
   const secondColor = highlightColor || HIGHLIGHT_COLOR;
 
   useEffect(() => {
-    // Simplified the Animated.loop configuration
+    // Looping animation configuration
     const animation = Animated.loop(
       Animated.timing(animatedValue, {
         toValue: 1,
@@ -34,6 +37,7 @@ const SkeletonLoader = ({ boneColor, highlightColor, style, width = 50 }) => {
       }),
     );
 
+    // Start the animation
     animation.start();
 
     // Cleanup animation on component unmount
@@ -52,10 +56,10 @@ const SkeletonLoader = ({ boneColor, highlightColor, style, width = 50 }) => {
 
   return (
     <AnimatedLG
-      colors={[firstColor, secondColor, firstColor]}
-      start={{ x: 0, y: 0 }}
-      end={{ x: 1, y: 0 }}
-      style={[{ transform: [{ translateX }] }, style]}
+      colors={[firstColor, secondColor, firstColor]} // Gradient colors
+      start={{ x: 0, y: 0 }} // Start of the gradient
+      end={{ x: 1, y: 0 }} // End of the gradient
+      style={[{ transform: [{ translateX }] }, style]} // Apply animation and custom styles
     />
   );
 };
