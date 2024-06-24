@@ -14,11 +14,23 @@ import Loader from './loader';
 
 const { GREEN } = colors;
 
+/**
+ * Bid Component
+ * Displays a list of bid prices and quantities.
+ *
+ * @param {Object} props - Component properties.
+ * @param {Array} props.data - Array of bid data objects.
+ * @param {function} props.onPress - Function to handle press events on each item.
+ *
+ * @returns {JSX.Element}
+ */
 const Bid = ({ data, onPress }) => {
+  // Memoized calculation of the total quantity of all bids
   const sumQuantities = useMemo(() => {
     return data.reduce((sum, obj) => sum + obj.quantity, 0);
   }, [data]);
 
+  // Function to calculate the percentage width based on the quantity
   const calculatePercentage = quantity => {
     const totalQuantity = sumQuantities;
     if (totalQuantity) {
@@ -27,6 +39,7 @@ const Bid = ({ data, onPress }) => {
     return 0;
   };
 
+  // Function to render each item in the FlatList
   const renderItem = ({ item }) => {
     if (!!data.length) {
       const { price, quantity } = item;
@@ -45,6 +58,7 @@ const Bid = ({ data, onPress }) => {
     return <Loader />;
   };
 
+  // If data is empty, create a default array with empty elements
   const dataList = data.length ? data : makeArrayNumber(defaultNumber);
 
   return (
@@ -54,13 +68,13 @@ const Bid = ({ data, onPress }) => {
         extraData={dataList}
         data={dataList}
         keyExtractor={(item, index) => index.toString()}
-        // scrollEnabled={false}
         contentContainerStyle={styles.contentContainerStyle}
       />
     </View>
   );
 };
 
+// Styles for the component
 const styles = StyleSheet.create({
   container: {
     flex: 1,

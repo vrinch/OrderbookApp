@@ -11,10 +11,26 @@ import { getStatusBarHeight } from 'react-native-iphone-x-helper';
 import { SCREEN_WIDTH } from '../utils/config';
 import { colors } from '../constants/theme';
 
+// Constants
 const DEFAULT_POSITION = -SCREEN_WIDTH;
-
 const { WHITE, GREEN } = colors;
 
+/**
+ * AnimatedBottomSheet Component
+ * A component that displays an animated bottom sheet.
+ *
+ * @param {Object} props - Component properties.
+ * @param {string} props.position - Position of the bottom sheet ('bottom' or 'top').
+ * @param {Object} props.textStyle - Custom styles for the text.
+ * @param {string} props.backgroundColor - Background color of the bottom sheet.
+ * @param {string} props.message - Message to be displayed inside the bottom sheet.
+ * @param {boolean} props.closeable - Determines if the bottom sheet is closeable.
+ * @param {boolean} props.visible - Visibility of the bottom sheet.
+ * @param {function} props.onDismiss - Callback function when the bottom sheet is dismissed.
+ * @param {number} props.timeOut - Timeout before the bottom sheet is automatically closed.
+ *
+ * @returns {JSX.Element}
+ */
 const AnimatedBottomSheet = ({
   position = 'bottom',
   textStyle,
@@ -25,25 +41,17 @@ const AnimatedBottomSheet = ({
   onDismiss,
   timeOut = 3000,
 }) => {
-  /**
-   * The animated value used for slide animation.
-   *
-   * @type {Animated.Value}
-   */
+  // The animated value used for slide animation
   const slideAnimation = useRef(new Animated.Value(DEFAULT_POSITION)).current;
 
+  // Effect to handle slide in animation when the component becomes visible
   useEffect(() => {
     if (visible) {
       slideIn();
     }
   }, [visible, slideIn]);
 
-  /**
-   * Function that slides in the bottom shee wrapper with animation.
-   * @function slideIn
-   * @memberof AnimatedBottomSheet
-   * @returns {void}
-   */
+  // Function to slide in the bottom sheet with animation
   const slideIn = useCallback(() => {
     Vibration.vibrate();
     Animated.timing(slideAnimation, {
@@ -57,13 +65,7 @@ const AnimatedBottomSheet = ({
     });
   }, [closeable, slideOut, timeOut]);
 
-  /**
-   * Slides out the component using an animated timing.
-   * @function slideOut
-   * @memberof AnimatedBottomSheet
-   * @param {function} onDismiss - The function to be called when the animation is complete.
-   * @returns {void}
-   */
+  // Function to slide out the bottom sheet with animation
   const slideOut = useCallback(() => {
     Animated.timing(slideAnimation, {
       toValue: DEFAULT_POSITION,
@@ -72,11 +74,7 @@ const AnimatedBottomSheet = ({
     }).start(onDismiss);
   }, [onDismiss]);
 
-  /**
-   * Handles the movement of the pan responder.
-   * @param {Object} _ - The event object.
-   * @param {Object} gestureState - The state of the gesture.
-   */
+  // Handles the movement of the pan responder
   const handlePanResponderMove = (_, gestureState) => {
     const shouldSlide =
       closeable &&
@@ -90,12 +88,7 @@ const AnimatedBottomSheet = ({
     }
   };
 
-  /**
-   * Handles the release of the pan responder gesture.
-   *
-   * @param {Object} _ - The event object.
-   * @param {Object} gestureState - The state of the gesture.
-   */
+  // Handles the release of the pan responder gesture
   const handlePanResponderRelease = (_, gestureState) => {
     if (closeable) {
       const dismissCondition =
@@ -116,14 +109,7 @@ const AnimatedBottomSheet = ({
     }
   };
 
-  /**
-   * PanResponder for handling touch gestures.
-   *
-   * @typedef {Object} PanResponder
-   * @property {function} onMoveShouldSetPanResponder - Determines whether the pan responder should become active for the given touch event and gesture state.
-   * @property {function} onPanResponderMove - Callback fired when the touch gesture moves.
-   * @property {function} onPanResponderRelease - Callback fired when the touch gesture is released.
-   */
+  // PanResponder for handling touch gestures
   const panResponder = PanResponder.create({
     onMoveShouldSetPanResponder: (_, gestureState) =>
       visible && Math.abs(gestureState.dy) > 5,
@@ -131,20 +117,18 @@ const AnimatedBottomSheet = ({
     onPanResponderRelease: handlePanResponderRelease,
   });
 
-  /**
-   * Opacity value for the slide animation.
-   *
-   * @type {Animated.Value}
-   */
+  // Opacity value for the slide animation
   const opacity = slideAnimation.interpolate({
     inputRange: [DEFAULT_POSITION, 0],
     outputRange: [0, 1],
   });
 
+  // Return null if the bottom sheet is not visible
   if (!visible) {
     return null;
   }
 
+  // Render the animated bottom sheet
   return (
     <Animated.View
       {...panResponder.panHandlers}
@@ -163,6 +147,7 @@ const AnimatedBottomSheet = ({
   );
 };
 
+// Styles for the component
 const styles = StyleSheet.create({
   container: {
     position: 'absolute',

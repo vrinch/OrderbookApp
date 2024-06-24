@@ -14,13 +14,26 @@ import Loader from './loader';
 
 const { RED } = colors;
 
+/**
+ * Ask Component
+ * Displays a list of ask prices and quantities.
+ *
+ * @param {Object} props - Component properties.
+ * @param {Array} props.data - Array of ask data objects.
+ * @param {function} props.onPress - Function to handle press events on each item.
+ *
+ * @returns {JSX.Element}
+ */
 const Ask = ({ data = [], onPress }) => {
+  // Reference for the FlatList component
   const flatListRef = useRef(null);
 
+  // Memoized calculation of the total quantity of all asks
   const sumQuantities = useMemo(() => {
     return data.reduce((sum, obj) => sum + obj.quantity, 0);
   }, [data]);
 
+  // Function to calculate the percentage width based on the quantity
   const calculatePercentage = quantity => {
     const totalQuantity = sumQuantities;
     if (totalQuantity) {
@@ -29,8 +42,9 @@ const Ask = ({ data = [], onPress }) => {
     return 0;
   };
 
+  // Function to render each item in the FlatList
   const renderItem = ({ item }) => {
-    if (!!data.length) {
+    if (data.length) {
       const { price, quantity } = item;
       const width = calculatePercentage(quantity);
       return (
@@ -47,6 +61,7 @@ const Ask = ({ data = [], onPress }) => {
     return <Loader />;
   };
 
+  // If data is empty, create a default array with empty elements
   const dataList = data.length ? data : makeArrayNumber(defaultNumber);
 
   return (
@@ -57,7 +72,6 @@ const Ask = ({ data = [], onPress }) => {
         extraData={dataList}
         data={dataList}
         keyExtractor={(item, index) => index.toString()}
-        // scrollEnabled={false}
         onLayout={() => flatListRef.current.scrollToEnd()}
         contentContainerStyle={styles.contentContainerStyle}
       />
@@ -65,6 +79,7 @@ const Ask = ({ data = [], onPress }) => {
   );
 };
 
+// Styles for the component
 const styles = StyleSheet.create({
   container: {
     flex: 1,
