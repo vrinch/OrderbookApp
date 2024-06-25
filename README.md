@@ -1,7 +1,7 @@
 # OrderbookApp
 
 <p align="center">
-<! ---  <img alt="Orderly: Track Order Book" src="./assets/images/demo.png" height="1170" width="2532" />
+<! ---  <img alt="Orderly: Track Order Book" src="./assets/images/demo.png" height="4527" width="7177" />
   <h3 align="center">Orderly: Track Order Book</h3>
 </p>
 
@@ -47,9 +47,9 @@ As others projects, you will need some requirements to run:
 
 Now, you can choose a command to run the project:
 
-- `expo start` to run on iOS or Android simulator
-- `expo start --ios` to run on iOS or Android simulator only
-- `expo start --android` to run on Android simulator only
+- `npx expo start` to run on iOS or Android simulator
+- `npx expo start --ios` to run on iOS or Android simulator only
+- `npx expo start --android` to run on Android simulator only
 
 ## Deploying
 
